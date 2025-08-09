@@ -187,6 +187,8 @@ header nav {
 .modal-large {
     max-width: 800px;
     width: 95%;
+    max-height: 90vh;
+    overflow-y: auto;
 }
 
 .order-header {
@@ -341,14 +343,30 @@ header nav {
 @media (max-width: 768px) {
     .stats-container {
         grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+    
+    .stat-card {
+        padding: 1rem;
+    }
+    
+    .stat-value {
+        font-size: 1.8rem;
     }
     
     .filters {
         grid-template-columns: 1fr;
+        gap: 0.75rem;
     }
     
     .action-buttons {
-        flex-direction: column;
+        flex-direction: row;
+        gap: 0.25rem;
+    }
+    
+    .btn-small {
+        padding: 0.4rem 0.75rem;
+        font-size: 0.8rem;
     }
     
     .order-actions {
@@ -357,10 +375,162 @@ header nav {
     
     .nav-tabs {
         flex-wrap: wrap;
+        gap: 0.5rem;
     }
     
     .tab-btn {
         font-size: 0.9rem;
         padding: 0.5rem 1rem;
+        flex: 1;
+        min-width: 100px;
+    }
+    
+    .table-responsive {
+        margin: 0 -1rem;
+        padding: 0 1rem;
+    }
+    
+    .orders-table,
+    .data-table {
+        font-size: 0.85rem;
+    }
+    
+    .orders-table th,
+    .orders-table td,
+    .data-table th,
+    .data-table td {
+        padding: 0.5rem;
+    }
+    
+    .data-table img {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .modal-large {
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
+        border-radius: 0;
+        height: 100%;
+        max-height: 100%;
+    }
+    
+    .order-info {
+        grid-template-columns: 1fr;
+    }
+    
+    /* Исправляем скролл для модальных окон на мобильных */
+    .modal {
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .modal-content {
+        margin: 10px;
+        max-height: calc(100vh - 20px);
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    header {
+        padding: 1rem 0;
+    }
+    
+    header h1 {
+        font-size: 1.5rem;
+    }
+    
+    header p {
+        font-size: 0.9rem;
+    }
+    
+    /* Кнопка выхода в шапке */
+    header .btn-secondary {
+        padding: 0.5rem 1rem;
+        font-size: 0.85rem;
+    }
+    
+    .form-group input[type="file"] {
+        font-size: 16px;
+    }
+    
+    .image-preview {
+        max-width: 150px;
+        margin: 0.5rem auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .stats-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .nav-tabs {
+        width: 100%;
+    }
+    
+    .tab-btn {
+        flex: 1 1 100%;
+    }
+    
+    .action-buttons {
+        justify-content: stretch;
+    }
+    
+    .btn-small {
+        flex: 1;
+    }
+    
+    /* Таблицы на очень маленьких экранах */
+    .orders-table,
+    .data-table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+    
+    .empty-state {
+        padding: 2rem 1rem;
+    }
+    
+    /* Форма заказа на мобильных */
+    .modal-content form .form-group {
+        margin-bottom: 1rem;
+    }
+    
+    .btn-edit,
+    .btn-delete {
+        padding: 0.4rem 0.75rem;
+        font-size: 0.8rem;
+        margin: 0.1rem;
+    }
+}
+
+/* Дополнительные стили для лучшей мобильной работы */
+@supports (-webkit-touch-callout: none) {
+    /* iOS specific fixes */
+    .modal-content {
+        position: relative;
+        -webkit-transform: translateZ(0);
+    }
+    
+    input[type="file"] {
+        font-size: 16px !important;
+    }
+}
+
+/* Улучшение видимости на мобильных */
+@media (hover: none) {
+    .btn-small:active,
+    .btn-edit:active,
+    .btn-delete:active,
+    .tab-btn:active {
+        transform: scale(0.95);
+    }
+    
+    .category-card:active,
+    .product-card:active {
+        transform: none;
+        opacity: 0.8;
     }
 }

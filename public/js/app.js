@@ -32,6 +32,17 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
         document.body.classList.remove('preload');
     }, 100);
+    
+    // Перерисовываем товары при изменении размера окна (поворот устройства)
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+            if (products.length > 0) {
+                displayProducts();
+            }
+        }, 250);
+    });
 });
 
 // Загрузка категорий
@@ -137,21 +148,44 @@ function displayProducts() {
         productCard.id = `product-${product.id}`;
         productCard.style.opacity = '0';
         
-        productCard.innerHTML = `
-            <img src="${product.image && !product.image.includes('/') ? `/uploads/${product.image}` : `/images/${product.image || 'default-product.jpg'}`}" 
-                 alt="${product.name}"
-                 onerror="this.src='/images/default-product.jpg'">
-            <h4>${product.name}</h4>
-            <p class="price">${product.price} KZT</p>
-            <div class="product-controls">
-                <div class="quantity-controls">
-                    <button onclick="changeQuantity(${product.id}, -1)">-</button>
-                    <input type="number" id="qty-${product.id}" value="0" min="0" readonly>
-                    <button onclick="changeQuantity(${product.id}, 1)">+</button>
+        // Проверяем ширину экрана для мобильной версии
+        const isMobile = window.innerWidth <= 768;
+        
+        if (isMobile) {
+            productCard.innerHTML = `
+                <img src="${product.image && !product.image.includes('/') ? `/uploads/${product.image}` : `/images/${product.image || 'default-product.jpg'}`}" 
+                     alt="${product.name}"
+                     onerror="this.src='/images/default-product.jpg'">
+                <div class="product-info">
+                    <h4>${product.name}</h4>
+                    <p class="price">${product.price} KZT</p>
+                    <div class="product-controls">
+                        <div class="quantity-controls">
+                            <button onclick="changeQuantity(${product.id}, -1)">-</button>
+                            <input type="number" id="qty-${product.id}" value="0" min="0" readonly>
+                            <button onclick="changeQuantity(${product.id}, 1)">+</button>
+                        </div>
+                    </div>
+                    <button class="btn-add" onclick="addToCart(${product.id})">В корзину</button>
                 </div>
-            </div>
-            <button class="btn-add" onclick="addToCart(${product.id})">В корзину</button>
-        `;
+            `;
+        } else {
+            productCard.innerHTML = `
+                <img src="${product.image && !product.image.includes('/') ? `/uploads/${product.image}` : `/images/${product.image || 'default-product.jpg'}`}" 
+                     alt="${product.name}"
+                     onerror="this.src='/images/default-product.jpg'">
+                <h4>${product.name}</h4>
+                <p class="price">${product.price} KZT</p>
+                <div class="product-controls">
+                    <div class="quantity-controls">
+                        <button onclick="changeQuantity(${product.id}, -1)">-</button>
+                        <input type="number" id="qty-${product.id}" value="0" min="0" readonly>
+                        <button onclick="changeQuantity(${product.id}, 1)">+</button>
+                    </div>
+                </div>
+                <button class="btn-add" onclick="addToCart(${product.id})">В корзину</button>
+            `;
+        }
         
         container.appendChild(productCard);
         

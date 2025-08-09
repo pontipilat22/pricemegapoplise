@@ -20,7 +20,13 @@ app.use(session({
     secret: process.env.SESSION_SECRET || 'your-secret-key-here',
     resave: false,
     saveUninitialized: false,
-    cookie: { maxAge: 24 * 60 * 60 * 1000 } // 24 часа
+    cookie: { 
+        maxAge: 24 * 60 * 60 * 1000, // 24 часа
+        secure: process.env.NODE_ENV === 'production', // HTTPS в продакшене
+        httpOnly: true
+    },
+    // Отключаем предупреждение о MemoryStore
+    name: 'sessionId'
 }));
 app.use(express.static('public'));
 
@@ -507,4 +513,37 @@ app.listen(PORT, () => {
     console.log(`Сервер запущен на порту ${PORT}`);
     console.log(`Откройте http://localhost:${PORT} для доступа к сайту`);
     console.log(`Админ-панель доступна по адресу http://localhost:${PORT}/admin`);
+    
+    // Информация о среде выполнения
+    console.log('\n=== Информация о среде ===');
+    console.log('NODE_ENV:', process.env.NODE_ENV || 'development');
+    console.log('RAILWAY_VOLUME_MOUNT_PATH:', process.env.RAILWAY_VOLUME_MOUNT_PATH || 'не установлен');
+    console.log('База данных:', dbPath);
+    console.log('Папка uploads:', uploadsPath);
+    console.log('========================\n');
+});
+
+// Обработка graceful shutdown
+process.on('SIGTERM', () => {
+    console.log('SIGTERM получен, закрываем сервер...');
+    db.close((err) => {
+        if (err) {
+            console.error('Ошибка при закрытии базы данных:', err);
+        } else {
+            console.log('База данных закрыта');
+        }
+        process.exit(0);
+    });
+});
+
+process.on('SIGINT', () => {
+    console.log('SIGINT получен, закрываем сервер...');
+    db.close((err) => {
+        if (err) {
+            console.error('Ошибка при закрытии базы данных:', err);
+        } else {
+            console.log('База данных закрыта');
+        }
+        process.exit(0);
+    });
 });

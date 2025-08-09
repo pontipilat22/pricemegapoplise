@@ -33,6 +33,8 @@ body {
     color: #333;
     background-color: var(--light-gray);
     scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent; /* Убираем подсветку при тапе */
+    touch-action: manipulation; /* Предотвращаем двойной тап для зума */
 }
 
 .container {
@@ -354,16 +356,19 @@ header p {
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
+    overflow-y: auto; /* Добавляем скролл для модального окна */
 }
 
 .modal-content {
     background-color: white;
-    margin: 10% auto;
+    margin: 20px auto;
     padding: 2rem;
     border-radius: var(--border-radius);
     width: 90%;
     max-width: 500px;
     position: relative;
+    max-height: 90vh; /* Ограничиваем высоту */
+    overflow-y: auto; /* Добавляем скролл для контента */
 }
 
 .close {
@@ -424,14 +429,63 @@ footer {
 
 /* Адаптивность */
 @media (max-width: 768px) {
-    .categories-grid,
-    .products-grid {
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    .container {
+        padding: 0 15px;
+    }
+    
+    .categories-grid {
+        grid-template-columns: repeat(2, 1fr);
         gap: 1rem;
     }
     
+    .products-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .category-card {
+        padding: 1rem;
+    }
+    
+    .category-card img {
+        max-width: 80px;
+        height: 80px;
+    }
+    
+    .category-card h3 {
+        font-size: 1rem;
+    }
+    
+    .product-card {
+        display: flex;
+        align-items: center;
+        padding: 1rem;
+        gap: 1rem;
+    }
+    
+    .product-card img {
+        width: 100px;
+        height: 100px;
+        flex-shrink: 0;
+    }
+    
+    .product-info {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .product-info h4 {
+        margin: 0;
+    }
+    
+    .product-info .price {
+        margin: 0;
+    }
+    
     .cart-table {
-        font-size: 0.9rem;
+        font-size: 0.85rem;
     }
     
     .cart-table th,
@@ -439,11 +493,93 @@ footer {
         padding: 0.5rem;
     }
     
+    .cart-table td:first-child {
+        font-size: 0.75rem;
+    }
+    
     .cart-actions {
         flex-direction: column;
     }
     
+    .cart-actions button {
+        width: 100%;
+    }
+    
     header h1 {
-        font-size: 2rem;
+        font-size: 1.75rem;
+    }
+    
+    header p {
+        font-size: 1rem;
+    }
+    
+    .card {
+        padding: 1.5rem;
+        margin: 1rem 0;
+    }
+    
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        font-size: 16px; /* Предотвращает зум на iOS */
+    }
+    
+    .modal-content {
+        margin: 10px;
+        padding: 1.5rem;
+        width: calc(100% - 20px);
+        max-height: calc(100vh - 20px);
+    }
+    
+    .btn-primary,
+    .btn-secondary,
+    .btn-danger,
+    .btn-add {
+        padding: 1rem 1.5rem;
+        font-size: 1rem;
+        width: 100%;
+    }
+    
+    .quantity-controls {
+        justify-content: center;
+        width: 100%;
+        gap: 0.75rem;
+    }
+    
+    .quantity-controls button {
+        width: 45px;
+        height: 45px;
+        font-size: 1.3rem;
+    }
+    
+    .quantity-controls input {
+        width: 70px;
+        font-size: 16px;
+    }
+    
+    .section-header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch;
+    }
+    
+    .section-header .btn-secondary {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .categories-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .cart-table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+    
+    .modal-content {
+        padding: 1rem;
     }
 }
