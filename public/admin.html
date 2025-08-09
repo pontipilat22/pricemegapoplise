@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Админ-панель - PriceMegapolis</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h1>Админ-панель PriceMegapolis</h1>
+                    <p>Управление системой</p>
+                </div>
+                <button class="btn-secondary" onclick="logout()" style="margin-right: 20px;">Выход</button>
+            </div>
+            <nav>
+                <div class="nav-tabs">
+                    <button class="tab-btn active" onclick="switchTab('orders')">Заказы</button>
+                    <button class="tab-btn" onclick="switchTab('categories')">Категории</button>
+                    <button class="tab-btn" onclick="switchTab('products')">Товары</button>
+                </div>
+                <a href="/" class="btn-secondary">← На главную</a>
+            </nav>
+        </header>
+
+        <main>
+            <!-- Вкладка заказов -->
+            <div id="orders-tab" class="tab-content active">
+                <!-- Статистика -->
+                <section class="stats-container">
+                    <div class="stat-card">
+                        <h3>Всего заказов</h3>
+                        <p class="stat-value" id="total-orders">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Новых заказов</h3>
+                        <p class="stat-value" id="new-orders">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Общая сумма</h3>
+                        <p class="stat-value" id="total-amount">0 KZT</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Сегодня заказов</h3>
+                        <p class="stat-value" id="today-orders">0</p>
+                    </div>
+                </section>
+
+            <!-- Фильтры -->
+            <section class="card">
+                <h2>Фильтры</h2>
+                <div class="filters">
+                    <div class="filter-group">
+                        <label for="filter-status">Статус:</label>
+                        <select id="filter-status" onchange="filterOrders()">
+                            <option value="all">Все заказы</option>
+                            <option value="new">Новые</option>
+                            <option value="processing">В обработке</option>
+                            <option value="completed">Выполненные</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="filter-date">Дата:</label>
+                        <input type="date" id="filter-date" onchange="filterOrders()">
+                    </div>
+                    <div class="filter-group">
+                        <label for="filter-search">Поиск:</label>
+                        <input type="text" id="filter-search" placeholder="Название магазина..." 
+                               oninput="filterOrders()">
+                    </div>
+                    <button class="btn-secondary" onclick="resetFilters()">Сбросить фильтры</button>
+                </div>
+            </section>
+
+            <!-- Таблица заказов -->
+            <section class="card">
+                <h2>Список заказов</h2>
+                <div class="table-responsive">
+                    <table class="orders-table">
+                        <thead>
+                            <tr>
+                                <th>№</th>
+                                <th>Дата</th>
+                                <th>Магазин</th>
+                                <th>Телефон</th>
+                                <th>Кол-во позиций</th>
+                                <th>Сумма</th>
+                                <th>Статус</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orders-tbody">
+                            <!-- Заказы загрузятся динамически -->
+                        </tbody>
+                    </table>
+                </div>
+                <div id="no-orders" class="empty-state" style="display: none;">
+                    <p>Заказов не найдено</p>
+                </div>
+            </section>
+            </div>
+
+            <!-- Вкладка категорий -->
+            <div id="categories-tab" class="tab-content" style="display: none;">
+                <section class="card">
+                    <div class="section-header">
+                        <h2>Управление категориями</h2>
+                        <button class="btn-primary" onclick="showCategoryForm()">+ Добавить категорию</button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Изображение</th>
+                                    <th>Название</th>
+                                    <th>Действия</th>
+                                </tr>
+                            </thead>
+                            <tbody id="categories-tbody">
+                                <!-- Категории загрузятся динамически -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Вкладка товаров -->
+            <div id="products-tab" class="tab-content" style="display: none;">
+                <section class="card">
+                    <div class="section-header">
+                        <h2>Управление товарами</h2>
+                        <button class="btn-primary" onclick="showProductForm()">+ Добавить товар</button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Изображение</th>
+                                    <th>Название</th>
+                                    <th>Категория</th>
+                                    <th>Цена</th>
+                                    <th>Действия</th>
+                                </tr>
+                            </thead>
+                            <tbody id="products-tbody">
+                                <!-- Товары загрузятся динамически -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Модальное окно деталей заказа -->
+    <div id="order-modal" class="modal">
+        <div class="modal-content modal-large">
+            <span class="close" onclick="closeOrderModal()">&times;</span>
+            <div id="order-details"></div>
+        </div>
+    </div>
+
+    <!-- Модальное окно для категорий -->
+    <div id="category-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeCategoryModal()">&times;</span>
+            <h2 id="category-modal-title">Добавить категорию</h2>
+            <form id="category-form" enctype="multipart/form-data">
+                <input type="hidden" id="category-id" name="id">
+                <div class="form-group">
+                    <label for="category-name">Название категории*</label>
+                    <input type="text" id="category-name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="category-image">Изображение</label>
+                    <input type="file" id="category-image" name="image" accept="image/*">
+                    <div id="category-image-preview" class="image-preview"></div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="closeCategoryModal()">Отмена</button>
+                    <button type="submit" class="btn-primary">Сохранить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Модальное окно для товаров -->
+    <div id="product-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeProductModal()">&times;</span>
+            <h2 id="product-modal-title">Добавить товар</h2>
+            <form id="product-form" enctype="multipart/form-data">
+                <input type="hidden" id="product-id" name="id">
+                <div class="form-group">
+                    <label for="product-category">Категория*</label>
+                    <select id="product-category" name="category_id" required>
+                        <option value="">Выберите категорию</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="product-name">Название товара*</label>
+                    <input type="text" id="product-name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="product-price">Цена*</label>
+                    <input type="number" id="product-price" name="price" step="0.01" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label for="product-image">Изображение</label>
+                    <input type="file" id="product-image" name="image" accept="image/*">
+                    <div id="product-image-preview" class="image-preview"></div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="closeProductModal()">Отмена</button>
+                    <button type="submit" class="btn-primary">Сохранить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/admin.js"></script>
+</body>
+</html>

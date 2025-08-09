@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Оформление заказа - PriceMegapolis</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>PriceMegapolis</h1>
+            <p>Система оформления заказов</p>
+        </header>
+
+        <main>
+            <!-- Форма информации о магазине -->
+            <section id="shop-info" class="card">
+                <h2>Информация о магазине</h2>
+                <form id="shop-form">
+                    <div class="form-group">
+                        <label for="shop-name">Название магазина*</label>
+                        <input type="text" id="shop-name" name="shopName" required 
+                               placeholder="Введите название вашего магазина">
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Телефон</label>
+                        <input type="tel" id="phone" name="phone" 
+                               placeholder="+7 (999) 123-45-67">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" 
+                               placeholder="example@mail.ru">
+                    </div>
+                </form>
+            </section>
+
+            <!-- Категории товаров -->
+            <section id="categories" class="card">
+                <h2>Выберите категорию</h2>
+                <div class="categories-grid" id="categories-container">
+                    <!-- Категории загрузятся динамически -->
+                </div>
+            </section>
+
+            <!-- Товары -->
+            <section id="products" class="card" style="display: none;">
+                <div class="section-header">
+                    <h2 id="category-title">Товары</h2>
+                    <button class="btn-secondary" onclick="backToCategories()">← Назад к категориям</button>
+                </div>
+                <div class="products-grid" id="products-container">
+                    <!-- Товары загрузятся динамически -->
+                </div>
+            </section>
+
+            <!-- Корзина -->
+            <section id="cart" class="card">
+                <h2>Корзина</h2>
+                <div id="cart-empty" class="empty-cart">
+                    <p>Корзина пуста. Выберите товары для заказа.</p>
+                </div>
+                <div id="cart-items" style="display: none;">
+                    <table class="cart-table">
+                        <thead>
+                            <tr>
+                                <th>Товар</th>
+                                <th>Цена</th>
+                                <th>Количество</th>
+                                <th>Сумма</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="cart-tbody">
+                            <!-- Товары в корзине -->
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="3"><strong>Итого:</strong></td>
+                                <td colspan="2"><strong id="cart-total">0 KZT</strong></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                    <div class="cart-actions">
+                        <button class="btn-danger" onclick="clearCart()">Очистить корзину</button>
+                        <button class="btn-primary" onclick="submitOrder()">Оформить заказ</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; 2025 PriceMegapolis. Все права защищены.</p>
+        </footer>
+    </div>
+
+    <!-- Модальное окно -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+
+    <!-- Индикатор загрузки -->
+    <div id="loader" class="loader">
+        <div class="spinner"></div>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
