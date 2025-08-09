@@ -13,7 +13,10 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware
-app.use(cors());
+app.use(cors({
+    credentials: true,
+    origin: true
+}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(session({
@@ -22,8 +25,9 @@ app.use(session({
     saveUninitialized: false,
     cookie: { 
         maxAge: 24 * 60 * 60 * 1000, // 24 часа
-        secure: process.env.NODE_ENV === 'production', // HTTPS в продакшене
-        httpOnly: true
+        secure: false, // Временно отключаем для тестирования локально
+        httpOnly: true,
+        sameSite: 'lax' // Добавляем для безопасности
     },
     // Отключаем предупреждение о MemoryStore
     name: 'sessionId'
@@ -129,11 +133,11 @@ db.serialize(() => {
         if (row.count === 0) {
             // Добавляем категории
             const categories = [
-                { name: 'Winston', image: 'winston.jpg' },
-                { name: 'LD', image: 'LD.jpg' },
-                { name: 'Parliament', image: 'parliament.jpg' },
-                { name: 'Marlboro', image: 'marlboro.jpg' },
-                { name: 'Captain Black', image: 'capitanblack.jpg' }
+                { name: 'Winston', image: '/images/winston.jpg' },
+                { name: 'LD', image: '/images/LD.jpg' },
+                { name: 'Parliament', image: '/images/parliament.jpg' },
+                { name: 'Marlboro', image: '/images/marlboro.jpg' },
+                { name: 'Captain Black', image: '/images/capitanblack.jpg' }
             ];
 
             categories.forEach(cat => {
@@ -178,17 +182,21 @@ function requireAuth(req, res, next) {
 // Логин администратора
 app.post('/api/login', (req, res) => {
     const { username, password } = req.body;
+    console.log('Login attempt:', username);
     
     db.get("SELECT * FROM admins WHERE username = ?", [username], (err, admin) => {
         if (err) {
+            console.error('Database error:', err);
             return res.status(500).json({ error: err.message });
         }
         
         if (!admin) {
+            console.log('Admin not found:', username);
             return res.status(401).json({ error: 'Неверные учетные данные' });
         }
         
         if (!bcrypt.compareSync(password, admin.password)) {
+            console.log('Invalid password for:', username);
             return res.status(401).json({ error: 'Неверные учетные данные' });
         }
         
@@ -196,7 +204,15 @@ app.post('/api/login', (req, res) => {
         req.session.adminId = admin.id;
         req.session.username = admin.username;
         
-        res.json({ success: true, username: admin.username });
+        // Сохраняем сессию явно
+        req.session.save((err) => {
+            if (err) {
+                console.error('Session save error:', err);
+                return res.status(500).json({ error: 'Ошибка сохранения сессии' });
+            }
+            console.log('Login successful:', username, 'Session ID:', req.sessionID);
+            res.json({ success: true, username: admin.username });
+        });
     });
 });
 

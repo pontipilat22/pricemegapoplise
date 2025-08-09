@@ -164,6 +164,7 @@
                     headers: {
                         'Content-Type': 'application/json'
                     },
+                    credentials: 'same-origin', // Важно для работы с куками
                     body: JSON.stringify({ username, password })
                 });
                 

@@ -5,11 +5,25 @@ let categories = [];
 let products = [];
 let currentTab = 'orders';
 
+// Функция для fetch с правильными настройками для работы с сессиями
+async function fetchWithCredentials(url, options = {}) {
+    return fetch(url, {
+        ...options,
+        credentials: 'same-origin',
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers
+        }
+    });
+}
+
 // Инициализация при загрузке страницы
 document.addEventListener('DOMContentLoaded', async () => {
     // Проверяем авторизацию
     try {
-        const response = await fetch('/api/check-auth');
+        const response = await fetch('/api/check-auth', {
+            credentials: 'same-origin'
+        });
         const data = await response.json();
         
         if (!data.isAuthenticated) {
