@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     loadOrders();
     loadCategories();
     loadProducts();
-    setInterval(loadOrders, 30000); // Обновляем каждые 30 секунд
+    setInterval(loadOrders, 30000); // Обновляем только заказы каждые 30 секунд
     
     // Обработчики форм
     document.getElementById('category-form').addEventListener('submit', handleCategorySubmit);

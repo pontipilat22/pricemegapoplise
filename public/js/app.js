@@ -38,13 +38,20 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Перерисовываем товары при изменении размера окна (поворот устройства)
     let resizeTimer;
+    let lastWidth = window.innerWidth;
+    
     window.addEventListener('resize', () => {
         clearTimeout(resizeTimer);
         resizeTimer = setTimeout(() => {
-            if (products.length > 0) {
+            // Перерисовываем только если ширина сильно изменилась (поворот экрана)
+            const currentWidth = window.innerWidth;
+            const widthDifference = Math.abs(currentWidth - lastWidth);
+            
+            if (products.length > 0 && widthDifference > 100) {
                 displayProducts();
+                lastWidth = currentWidth;
             }
-        }, 250);
+        }, 500); // Увеличиваем задержку
     });
 });
 
@@ -157,6 +164,12 @@ function backToCategories() {
 // Отображение товаров
 function displayProducts() {
     const container = document.getElementById('products-container');
+    
+    // Проверяем, нужно ли перерисовывать (если товары уже отображены)
+    if (container.children.length === products.length && products.length > 0) {
+        return; // Не перерисовываем если товары уже есть
+    }
+    
     container.innerHTML = '';
     
     products.forEach((product, index) => {
@@ -213,11 +226,11 @@ function displayProducts() {
         
         container.appendChild(productCard);
         
-        // Плавное появление с задержкой
+        // Плавное появление с задержкой (уменьшаем анимацию)
         setTimeout(() => {
-            productCard.style.transition = 'opacity 0.3s ease';
+            productCard.style.transition = 'opacity 0.2s ease';
             productCard.style.opacity = '1';
-        }, index * 50);
+        }, index * 20); // Уменьшили задержку
         
         // Обновляем количество, если товар уже в корзине
         const cartItem = cart.find(item => item.productId === product.id);
