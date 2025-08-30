@@ -128,45 +128,8 @@ db.serialize(() => {
         }
     });
 
-    // Добавляем тестовые данные, если база пустая
-    db.get("SELECT COUNT(*) as count FROM categories", (err, row) => {
-        if (row.count === 0) {
-            // Добавляем категории
-            const categories = [
-                { name: 'Winston', image: '/images/winston.jpg' },
-                { name: 'LD', image: '/images/LD.jpg' },
-                { name: 'Parliament', image: '/images/parliament.jpg' },
-                { name: 'Marlboro', image: '/images/marlboro.jpg' },
-                { name: 'Captain Black', image: '/images/capitanblack.jpg' }
-            ];
-
-            categories.forEach(cat => {
-                db.run("INSERT INTO categories (name, image) VALUES (?, ?)", [cat.name, cat.image]);
-            });
-
-            // Добавляем товары
-            setTimeout(() => {
-                const products = [
-                    { category_id: 1, name: 'Winston Blue', price: 150 },
-                    { category_id: 1, name: 'Winston Red', price: 150 },
-                    { category_id: 1, name: 'Winston Silver', price: 145 },
-                    { category_id: 2, name: 'LD Blue', price: 130 },
-                    { category_id: 2, name: 'LD Red', price: 130 },
-                    { category_id: 3, name: 'Parliament Aqua Blue', price: 180 },
-                    { category_id: 3, name: 'Parliament Night Blue', price: 180 },
-                    { category_id: 4, name: 'Marlboro Red', price: 170 },
-                    { category_id: 4, name: 'Marlboro Gold', price: 170 },
-                    { category_id: 5, name: 'Captain Black Dark Crema', price: 200 },
-                    { category_id: 5, name: 'Captain Black Cherry', price: 200 }
-                ];
-
-                products.forEach(prod => {
-                    db.run("INSERT INTO products (category_id, name, price, image) VALUES (?, ?, ?, ?)", 
-                        [prod.category_id, prod.name, prod.price, 'nophoto.jpg']);
-                });
-            }, 1000);
-        }
-    });
+    // База данных готова - никаких предустановленных данных
+    console.log('База данных инициализирована. Добавляйте категории и товары через админ панель.');
 });
 
 // Middleware для проверки авторизации

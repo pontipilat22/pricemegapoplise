@@ -289,6 +289,11 @@ header nav {
     height: 50px;
     object-fit: cover;
     border-radius: var(--border-radius);
+    background-color: var(--light-gray);
+    background-image: url('/images/nophoto.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 /* Формы */

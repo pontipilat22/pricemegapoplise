@@ -33,6 +33,9 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.classList.remove('preload');
     }, 100);
     
+    // Предзагружаем основные изображения для предотвращения дергания
+    preloadImages(['/images/nophoto.jpg', '/images/default-category.jpg', '/images/default-product.jpg']);
+    
     // Перерисовываем товары при изменении размера окна (поворот устройства)
     let resizeTimer;
     window.addEventListener('resize', () => {
@@ -44,6 +47,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 250);
     });
 });
+
+// Функция предзагрузки изображений
+function preloadImages(imageUrls) {
+    imageUrls.forEach(url => {
+        const img = new Image();
+        img.src = url;
+    });
+}
 
 // Загрузка категорий
 async function loadCategories() {
@@ -74,10 +85,16 @@ function displayCategories() {
         categoryCard.onclick = () => selectCategory(category);
         categoryCard.style.opacity = '0';
         
+        // Определяем правильный путь к изображению категории
+        const categoryImageSrc = category.image && category.image !== '/images/nophoto.jpg' && !category.image.includes('/') 
+            ? `/uploads/${category.image}` 
+            : '/images/nophoto.jpg';
+        
         categoryCard.innerHTML = `
-            <img src="${category.image && !category.image.includes('/') ? `/uploads/${category.image}` : `/images/${category.image || 'default-category.jpg'}`}" 
+            <img src="${categoryImageSrc}" 
                  alt="${category.name}" 
-                 onerror="this.src='/images/default-category.jpg'">
+                 loading="lazy"
+                 onerror="this.style.display='none'">
             <h3>${category.name}</h3>
         `;
         
@@ -151,11 +168,17 @@ function displayProducts() {
         // Проверяем ширину экрана для мобильной версии
         const isMobile = window.innerWidth <= 768;
         
+        // Определяем правильный путь к изображению
+        const imageSrc = product.image && product.image !== '/images/nophoto.jpg' && !product.image.includes('/') 
+            ? `/uploads/${product.image}` 
+            : '/images/nophoto.jpg';
+
         if (isMobile) {
             productCard.innerHTML = `
-                <img src="${product.image && !product.image.includes('/') ? `/uploads/${product.image}` : `/images/${product.image || 'default-product.jpg'}`}" 
+                <img src="${imageSrc}" 
                      alt="${product.name}"
-                     onerror="this.src='/images/default-product.jpg'">
+                     loading="lazy"
+                     onerror="this.style.display='none'">
                 <div class="product-info">
                     <h4>${product.name}</h4>
                     <p class="price">${product.price} KZT</p>
@@ -171,9 +194,10 @@ function displayProducts() {
             `;
         } else {
             productCard.innerHTML = `
-                <img src="${product.image && !product.image.includes('/') ? `/uploads/${product.image}` : `/images/${product.image || 'default-product.jpg'}`}" 
+                <img src="${imageSrc}" 
                      alt="${product.name}"
-                     onerror="this.src='/images/default-product.jpg'">
+                     loading="lazy"
+                     onerror="this.style.display='none'">
                 <h4>${product.name}</h4>
                 <p class="price">${product.price} KZT</p>
                 <div class="product-controls">
