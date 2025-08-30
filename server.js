@@ -128,8 +128,197 @@ db.serialize(() => {
         }
     });
 
-    // База данных готова - никаких предустановленных данных
-    console.log('База данных инициализирована. Добавляйте категории и товары через админ панель.');
+        // Добавляем тестовые данные, если база пустая
+    db.get("SELECT COUNT(*) as count FROM categories", (err, row) => {
+        if (!row || row.count === 0) {
+            // Добавляем категории
+            const categories = [
+                'HEETS', 'L&M', 'FIIT', 'DELIA', 'LD', 'Parliament', 
+                'Philip Morris', 'Marlboro', 'Richmond', 'Sobranie', 
+                'Sovereign', 'TEREA', 'Winston', 'Camel', 'Captain Black', 'Зажигалки BIC'
+            ];
+
+            categories.forEach((name, index) => {
+                const image = name === 'Winston' ? '/images/winston.jpg' :
+                             name === 'Parliament' ? '/images/parliament.jpg' :
+                             name === 'Marlboro' ? '/images/marlboro.jpg' :
+                             name === 'Captain Black' ? '/images/capitanblack.jpg' :
+                             name === 'L&M' || name === 'LD' ? '/images/LD.jpg' :
+                             '/images/nophoto.jpg';
+                
+                db.run("INSERT INTO categories (name, image) VALUES (?, ?)", [name, image]);
+            });
+
+            // Добавляем товары
+            setTimeout(() => {
+                const allProducts = [
+                    // HEETS (category_id: 1) - умножаем на 10
+                    { cat: 'HEETS', name: 'HEETS YELLOW SELECT', price: 9688.00 },
+                    { cat: 'HEETS', name: 'HEETS AMBER SELECT', price: 9688.00 },
+                    { cat: 'HEETS', name: 'HEETS BRONZE SELECT', price: 9688.00 },
+                    { cat: 'HEETS', name: 'HEETS RUBY FUSE', price: 9688.00 },
+
+                    // L&M (category_id: 2) - умножаем на 10
+                    { cat: 'L&M', name: 'L&M LIG LOFTMIX', price: 9058.00 },
+                    { cat: 'L&M', name: 'L&M LIG LOUNGEMIX', price: 9058.00 },
+                    { cat: 'L&M', name: 'L&M LOFT', price: 9058.00 },
+                    { cat: 'L&M', name: 'L&M LOFT BLUE', price: 9058.00 },
+                    { cat: 'L&M', name: 'L&M LOFT SEA BLUE', price: 9058.00 },
+                    { cat: 'L&M', name: 'L&M LOU SUM SPLASH', price: 9058.00 },
+                    { cat: 'L&M', name: 'L&M LOUNGE BLUE', price: 9058.00 },
+                    { cat: 'L&M', name: 'L&M SUNNY BEACH', price: 9058.00 },
+
+                    // FIIT (category_id: 3) - умножаем на 10
+                    { cat: 'FIIT', name: 'FIIT REGULAR SKY', price: 9212.00 },
+                    { cat: 'FIIT', name: 'FIIT TROPIC', price: 9212.00 },
+                    { cat: 'FIIT', name: 'FIIT CRISP', price: 9212.00 },
+                    { cat: 'FIIT', name: 'FIIT REGULAR', price: 9212.00 },
+
+                    // DELIA (category_id: 4) - умножаем на 10
+                    { cat: 'DELIA', name: 'DELIA CORAL', price: 9212.00 },
+                    { cat: 'DELIA', name: 'DELIA GOLD', price: 9212.00 },
+                    { cat: 'DELIA', name: 'DELIA GREEN', price: 9212.00 },
+                    { cat: 'DELIA', name: 'DELIA BURGUNDY', price: 9212.00 },
+
+                    // LD (category_id: 5) - умножаем на 10
+                    { cat: 'LD', name: 'LD AMBER SSL', price: 9058.00 },
+                    { cat: 'LD', name: 'LD CLUB SILVER', price: 9058.00 },
+                    { cat: 'LD', name: 'LD COMP100S SILVER', price: 9058.00 },
+                    { cat: 'LD', name: 'LD COMPACT BLUE', price: 9058.00 },
+                    { cat: 'LD', name: 'LD COMPACT SILVER', price: 9058.00 },
+                    { cat: 'LD', name: 'LD SL VIR PLUSBLUE', price: 9058.00 },
+                    { cat: 'LD', name: 'LD STATE LINE BLUE', price: 9058.00 },
+                    { cat: 'LD', name: 'LD STATE LINE RED', price: 9058.00 },
+                    { cat: 'LD', name: 'LD SUPSLIMS LOUNGE', price: 9058.00 },
+                    { cat: 'LD', name: 'LD VIOLET SSL', price: 9058.00 },
+                    { cat: 'LD', name: 'LD VIRGINIA SLIMS', price: 9058.00 },
+
+                    // Parliament (category_id: 6) - умножаем на 10
+                    { cat: 'Parliament', name: 'PARLIAMENT PLATIN', price: 10458.00 },
+                    { cat: 'Parliament', name: 'PARLIAMENT RES 100', price: 9982.00 },
+                    { cat: 'Parliament', name: 'PARLIAMENT RESERVE', price: 9982.00 },
+                    { cat: 'Parliament', name: 'PARLIAMENT SILVER', price: 10458.00 },
+                    { cat: 'Parliament', name: 'PARLIAMENT AQUA', price: 10458.00 },
+                    { cat: 'Parliament', name: 'PARLIAMENT NIGHT', price: 10458.00 },
+                    { cat: 'Parliament', name: 'PRL SOH COMP BLUE', price: 9982.00 },
+                    { cat: 'Parliament', name: 'PRL SOH COMP SILVE', price: 9982.00 },
+                    { cat: 'Parliament', name: 'PRL SSL SUMMER FUS', price: 9982.00 },
+                    { cat: 'Parliament', name: 'PRL SSL WINTER FUS', price: 9982.00 },
+
+                    // Philip Morris (category_id: 7) - умножаем на 10
+                    { cat: 'Philip Morris', name: 'PHIL MOR BLUE', price: 9058.00 },
+                    { cat: 'Philip Morris', name: 'PHIL MOR RED', price: 9058.00 },
+                    { cat: 'Philip Morris', name: 'PHIL MOR SILVER', price: 9058.00 },
+                    { cat: 'Philip Morris', name: 'PHIL MORR COM BLUE', price: 9058.00 },
+                    { cat: 'Philip Morris', name: 'PHIL MORR COM SILV', price: 9058.00 },
+
+                    // Marlboro (category_id: 8) - умножаем на 10
+                    { cat: 'Marlboro', name: 'MARLBORO FINETOUCH', price: 9618.00 },
+                    { cat: 'Marlboro', name: 'MARLBORO GOLD', price: 9996.00 },
+                    { cat: 'Marlboro', name: 'MARLBORO TOUCH', price: 9618.00 },
+                    { cat: 'Marlboro', name: 'MARLB GOLD SPECIAL', price: 9702.00 },
+                    { cat: 'Marlboro', name: 'MARLB RED SPECIAL', price: 9702.00 },
+                    { cat: 'Marlboro', name: 'MARLBORO', price: 9996.00 },
+                    { cat: 'Marlboro', name: 'MARLBORO DOUBLE MI', price: 9618.00 },
+
+                    // Richmond (category_id: 9) - умножаем на 10
+                    { cat: 'Richmond', name: 'RICH.BLUE EDIT.100', price: 10290.00 },
+                    { cat: 'Richmond', name: 'RICH.GRAND EDITION', price: 10640.00 },
+                    { cat: 'Richmond', name: 'RICHMOND BLACK', price: 10640.00 },
+                    { cat: 'Richmond', name: 'RICHMOND BLUE EDIT', price: 10290.00 },
+                    { cat: 'Richmond', name: 'RICHMOND BRONZE', price: 10640.00 },
+                    { cat: 'Richmond', name: 'RICHMOND EMPEROR', price: 10290.00 },
+                    { cat: 'Richmond', name: 'RICHMOND GOLD EDIT', price: 10640.00 },
+                    { cat: 'Richmond', name: 'RICHMOND RED', price: 10640.00 },
+                    { cat: 'Richmond', name: 'RICHMOND ROYAL', price: 10640.00 },
+
+                    // Sobranie (category_id: 10) - умножаем на 10
+                    { cat: 'Sobranie', name: 'SOBRANREFCHR100\'S', price: 10192.00 },
+
+                    // Sovereign (category_id: 11) - умножаем на 10
+                    { cat: 'Sovereign', name: 'SOVEREIGN CM 100\'S', price: 9058.00 },
+                    { cat: 'Sovereign', name: 'SOVEREIGN CMPT BL', price: 9058.00 },
+
+                    // TEREA (category_id: 12) - умножаем на 10
+                    { cat: 'TEREA', name: 'TEREA AMBER', price: 9674.00 },
+                    { cat: 'TEREA', name: 'TEREA BLUE', price: 9674.00 },
+                    { cat: 'TEREA', name: 'TEREA PROVEN PEARL', price: 9674.00 },
+                    { cat: 'TEREA', name: 'TEREA PURPLE WAVE', price: 9674.00 },
+                    { cat: 'TEREA', name: 'TEREA SILVER', price: 9674.00 },
+                    { cat: 'TEREA', name: 'TEREA STARL PEARL', price: 9674.00 },
+                    { cat: 'TEREA', name: 'TEREA SUMMER WAVE', price: 9674.00 },
+                    { cat: 'TEREA', name: 'TEREA SUN PEARL', price: 9674.00 },
+                    { cat: 'TEREA', name: 'TEREA TIDAL PEARL', price: 9674.00 },
+                    { cat: 'TEREA', name: 'TEREA TURQUOISE', price: 9674.00 },
+                    { cat: 'TEREA', name: 'TEREA TWILIGHT PRL', price: 9674.00 },
+                    { cat: 'TEREA', name: 'TEREA YELLOW', price: 9674.00 },
+                    { cat: 'TEREA', name: 'TEREA ZING WAVE', price: 9674.00 },
+
+                    // Winston (category_id: 13) - умножаем на 10
+                    { cat: 'Winston', name: 'WIN PURPLE OPTION', price: 9716.00 },
+                    { cat: 'Winston', name: 'WINST BAIZE OPTION', price: 9716.00 },
+                    { cat: 'Winston', name: 'WINST GREEN OPTION', price: 9716.00 },
+                    { cat: 'Winston', name: 'WINST XSTYLE 100\'S', price: 9520.00 },
+                    { cat: 'Winston', name: 'WINST. LEGEND', price: 9520.00 },
+                    { cat: 'Winston', name: 'WINSTON AMARILLO', price: 9716.00 },
+                    { cat: 'Winston', name: 'WINSTON BLUE SSL', price: 9520.00 },
+                    { cat: 'Winston', name: 'WINSTON SUMMER MIX', price: 9142.00 },
+                    { cat: 'Winston', name: 'WINSTON WHITESSL', price: 9520.00 },
+                    { cat: 'Winston', name: 'WINSTON XSTYLE BL', price: 9520.00 },
+                    { cat: 'Winston', name: 'WINSTON XSTYLE SIL', price: 9520.00 },
+                    { cat: 'Winston', name: 'WINSTON XSTYLEDUAL', price: 9520.00 },
+                    { cat: 'Winston', name: 'WINSTON ECRU', price: 9716.00 },
+                    { cat: 'Winston', name: 'WINSTON FLUO', price: 9716.00 },
+                    { cat: 'Winston', name: 'WINSTON GOLD', price: 9716.00 },
+                    { cat: 'Winston', name: 'WINSTON PINKOPTION', price: 9716.00 },
+                    { cat: 'Winston', name: 'WINSTON PURPLE MIX', price: 9142.00 },
+                    { cat: 'Winston', name: 'WINSTON RUBY', price: 9716.00 },
+                    { cat: 'Winston', name: 'WINSTON RUBYOPTION', price: 9716.00 },
+                    { cat: 'Winston', name: 'WINSTON SILVER SSL', price: 9520.00 },
+                    { cat: 'Winston', name: 'WINSTON SSL GREEN', price: 9142.00 },
+                    { cat: 'Winston', name: 'WINSTON SSL VIOLET', price: 9142.00 },
+                    { cat: 'Winston', name: 'WINSTON BRONZE', price: 9716.00 },
+                    { cat: 'Winston', name: 'WINSTON CAST+DREAM', price: 9520.00 },
+                    { cat: 'Winston', name: 'WINSTON COMP 100\'S', price: 9142.00 },
+                    { cat: 'Winston', name: 'WINSTON COMPACT BL', price: 9142.00 },
+                    { cat: 'Winston', name: 'WINSTON COMPACT SI', price: 9142.00 },
+                    { cat: 'Winston', name: 'WINSTONSSEXPRBLUE', price: 9142.00 },
+                    { cat: 'Winston', name: 'WINSTONSSEXPURPLE', price: 9142.00 },
+                    { cat: 'Winston', name: 'WINXSTYLE CAST+100', price: 9520.00 },
+
+                    // Camel (category_id: 14) - умножаем на 10
+                    { cat: 'Camel', name: 'CAMEL YELLOW', price: 10010.00 },
+
+                    // Captain Black (category_id: 15) - умножаем на 10
+                    { cat: 'Captain Black', name: 'CAPTAIN CHERISE', price: 17920.00 },
+                    { cat: 'Captain Black', name: 'CAPTAIN CLASSIC', price: 17920.00 },
+                    { cat: 'Captain Black', name: 'CAPTAIN DARK CREMA', price: 17920.00 },
+                    { cat: 'Captain Black', name: 'CAPTAIN GRAPE', price: 17920.00 },
+
+                    // Зажигалки BIC (цены за единицу - НЕ умножаем!)
+                    { cat: 'Зажигалки BIC', name: 'ЗАЖ BIC J6 МАКСИ', price: 350.00 },
+                    { cat: 'Зажигалки BIC', name: 'ЗАЖ БИКJ3 ЛУНА Т50', price: 287.00 },
+                    { cat: 'Зажигалки BIC', name: 'BIC 3 КАРТА 24', price: 385.00 },
+                    { cat: 'Зажигалки BIC', name: 'BIC 3 СЕНСАТИВ 4Ш', price: 1302.00 },
+                    { cat: 'Зажигалки BIC', name: 'BIC МЕТАЛ КАРТА 36', price: 210.00 },
+                    { cat: 'Зажигалки BIC', name: 'BIC ТВИН ЛЕДИ 5Ш', price: 868.00 }
+                ];
+
+                // Добавляем товары в правильные категории
+                allProducts.forEach(prod => {
+                    // Находим ID категории по названию
+                    db.get("SELECT id FROM categories WHERE name = ?", [prod.cat], (err, category) => {
+                        if (category) {
+                            db.run("INSERT INTO products (category_id, name, price) VALUES (?, ?, ?)", 
+                                [category.id, prod.name, prod.price]);
+                        }
+                    });
+                });
+
+                console.log(`Добавлено ${categories.length} категорий и ${allProducts.length} товаров`);
+            }, 1000);
+        }
+    });
 });
 
 // Middleware для проверки авторизации

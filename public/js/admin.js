@@ -420,11 +420,6 @@ function displayProducts() {
         const row = document.createElement('tr');
         row.innerHTML = `
             <td>${product.id}</td>
-            <td>
-                <img src="${product.image ? `/uploads/${product.image}` : '/images/default-product.jpg'}" 
-                     alt="${product.name}" 
-                     onerror="this.src='/images/default-product.jpg'">
-            </td>
             <td>${product.name}</td>
             <td>${product.category_name}</td>
             <td>${product.price} KZT</td>

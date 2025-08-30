@@ -529,15 +529,51 @@ footer {
     
     .cart-table {
         font-size: 0.85rem;
+        min-width: 100%;
+        table-layout: fixed;
     }
     
     .cart-table th,
     .cart-table td {
-        padding: 0.5rem;
+        padding: 0.5rem 0.25rem;
+        word-wrap: break-word;
     }
     
     .cart-table td:first-child {
         font-size: 0.75rem;
+        width: 30%;
+    }
+    
+    .cart-table td:nth-child(2) {
+        width: 20%;
+        text-align: center;
+    }
+    
+    .cart-table td:nth-child(3) {
+        width: 15%;
+        text-align: center;
+    }
+    
+    .cart-table td:nth-child(4) {
+        width: 20%;
+        text-align: right;
+        font-weight: bold;
+    }
+    
+    .cart-table td:last-child {
+        width: 15%;
+        text-align: center;
+    }
+    
+    /* Фиксируем итоговую строку */
+    .cart-table tfoot td {
+        position: sticky;
+        bottom: 0;
+        background: white;
+        font-size: 1rem;
+        font-weight: bold;
+        border-top: 2px solid var(--primary-color);
+        box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
     }
     
     .cart-actions {
